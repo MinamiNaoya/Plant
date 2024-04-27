@@ -4,10 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 
-	_ "github.com/go-sql-driver/mysql"
-	"gopkg.in/yaml.v2"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type PlantInfo struct {
@@ -69,53 +67,26 @@ func inputPlantInfo() PlantInfo{
 	return plant
 }
 
+
+
 func main() {
-	yamlFile, err := os.ReadFile("plant/config.yml")
-	if err != nil {
-		fmt.Println("Error reading YAML file:", err)
-		return
-	}
-	var config Config
-	err = yaml.Unmarshal(yamlFile, &config)
-	if err != nil {
-		fmt.Println("Error unmarshalling YAML:", err)
-		return
-	}
 	plant := inputPlantInfo()
 
-	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%d)/",
-		config.Database.User,
-		config.Database.Password,
-		config.Server.Host,
-		config.Server.Port,
-	)
-	
-	// データベースに接続
-	db, err := sql.Open("mysql", connectionString)
+	dbPath := "./plant.db"
+	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	// データベースの作成
-	_, err = db.Exec("CREATE DATABASE IF NOT EXISTS plant")
-	if err != nil {
-		fmt.Println("Error creating database:", err)
-		return
-	}
-	// データベースを選択
-	_, err = db.Exec("USE plant")
-	if err != nil {
-		log.Fatal(err)
-	}
-	// テーブルの作成
+	
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS plant_info (
 		min_temp INT,
 		max_temp INT,
-		fertilizer VARCHAR(255),
-		habitat VARCHAR(255),
-		water_frequency VARCHAR(255),
-		summer_or_winter VARCHAR(255),
-		purchase_date DATE
+		fertilizer TEXT,
+		habitat TEXT,
+		water_frequency TEXT,
+		summer_or_winter TEXT,
+		purchase_date TEXT
 	)`)
 	if err != nil {
 		log.Fatal(err)
@@ -129,7 +100,9 @@ func main() {
 	
 
 	// クエリの実行
-	stmt.Exec(plant.MinTemp, plant.MaxTemp, plant.Fertilizer, plant.Habitat, plant.WaterFreq, plant.SummerOrWinter, plant.PurchaseDate)
-
+	_, err = stmt.Exec(plant.MinTemp, plant.MaxTemp, plant.Fertilizer, plant.Habitat, plant.WaterFreq, plant.SummerOrWinter, plant.PurchaseDate)
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println("植物の情報をデータベースに登録しました。")
 }
