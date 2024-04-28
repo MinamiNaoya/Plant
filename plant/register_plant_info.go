@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"github.com/MinamiNaoya/Plant/database/dboperate"
+	"github.com/MinamiNaoya/Plant/database/database"
 	_ "github.com/mattn/go-sqlite3"
 
 )
