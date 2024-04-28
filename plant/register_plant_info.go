@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-
+	"github.com/minaminaoya/Plant/database/dboperate"
 	_ "github.com/mattn/go-sqlite3"
+
 )
 
 type PlantInfo struct {
@@ -67,18 +68,8 @@ func inputPlantInfo() PlantInfo{
 	return plant
 }
 
-
-
-func main() {
-	plant := inputPlantInfo()
-
-	dbPath := "./plant.db"
-	db, err := sql.Open("sqlite3", dbPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-	
+func createPlantInfoTable(db *sql.DB) {
+	var err error
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS plant_info (
 		min_temp INT,
 		max_temp INT,
@@ -91,18 +82,35 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+}
+
+func prepareInsertStatement(db *sql.DB) *sql.Stmt {
 	stmt, err := db.Prepare("INSERT INTO plant_info (min_temp, max_temp, fertilizer, habitat, water_frequency, summer_or_winter, purchase_date) VALUES (?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		panic(err.Error())
 	}
-	defer stmt.Close()
-	
+	return stmt
+}
 
-	// クエリの実行
+func execStatement(stmt *sql.Stmt, plant PlantInfo){
+	var err error
 	_, err = stmt.Exec(plant.MinTemp, plant.MaxTemp, plant.Fertilizer, plant.Habitat, plant.WaterFreq, plant.SummerOrWinter, plant.PurchaseDate)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println("植物の情報をデータベースに登録しました。")
+}
+
+func main() {
+	plant := inputPlantInfo()
+
+	dbPath := "./plant.db"
+	dbDriver := "sqlite3"
+	db, _ := dboperate.setupDB(dbDriver, dbPath)
+	defer db.Close()
+	
+	createPlantInfoTable(db)
+	stmt := prepareInsertStatement(db)
+	defer stmt.Close()
+	execStatement(stmt, plant)
 }
