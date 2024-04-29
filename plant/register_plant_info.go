@@ -1,15 +1,15 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
-	"log"
-	"github.com/MinamiNaoya/Plant/database/database"
-	_ "github.com/mattn/go-sqlite3"
-
+    "database/sql"
+    "github.com/MinamiNaoya/Plant/database" 
+    _ "github.com/mattn/go-sqlite3"
+    "fmt"
+    "log"
 )
 
 type PlantInfo struct {
+	Name 			  string
 	MinTemp           int
 	MaxTemp           int
 	Fertilizer        string
@@ -57,6 +57,7 @@ func inputInt(prompt string) int {
 
 func inputPlantInfo() PlantInfo{
 	var plant PlantInfo
+	plant.Name = inputString("名前：")
 	plant.MinTemp = inputInt("最低気温: ")
 	plant.MaxTemp = inputInt("最高気温: ")
 	plant.Fertilizer = inputString("肥料: ")
@@ -71,6 +72,7 @@ func inputPlantInfo() PlantInfo{
 func createPlantInfoTable(db *sql.DB) {
 	var err error
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS plant_info (
+		name TEXT,
 		min_temp INT,
 		max_temp INT,
 		fertilizer TEXT,
@@ -85,7 +87,7 @@ func createPlantInfoTable(db *sql.DB) {
 }
 
 func prepareInsertStatement(db *sql.DB) *sql.Stmt {
-	stmt, err := db.Prepare("INSERT INTO plant_info (min_temp, max_temp, fertilizer, habitat, water_frequency, summer_or_winter, purchase_date) VALUES (?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO plant_info (name, min_temp, max_temp, fertilizer, habitat, water_frequency, summer_or_winter, purchase_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -94,19 +96,20 @@ func prepareInsertStatement(db *sql.DB) *sql.Stmt {
 
 func execStatement(stmt *sql.Stmt, plant PlantInfo){
 	var err error
-	_, err = stmt.Exec(plant.MinTemp, plant.MaxTemp, plant.Fertilizer, plant.Habitat, plant.WaterFreq, plant.SummerOrWinter, plant.PurchaseDate)
+	_, err = stmt.Exec(plant.Name, plant.MinTemp, plant.MaxTemp, plant.Fertilizer, plant.Habitat, plant.WaterFreq, plant.SummerOrWinter, plant.PurchaseDate)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println("植物の情報をデータベースに登録しました。")
 }
 
+
 func main() {
 	plant := inputPlantInfo()
 
 	dbPath := "./plant.db"
 	dbDriver := "sqlite3"
-	db, _ := dboperate.setupDB(dbDriver, dbPath)
+	db, _ := database.SetupDB(dbDriver, dbPath)
 	defer db.Close()
 	
 	createPlantInfoTable(db)
