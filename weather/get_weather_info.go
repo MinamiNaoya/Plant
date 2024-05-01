@@ -54,7 +54,10 @@ func saveWeatherInfoJsonFile(url string) {
 
 }
 
-
+// 地域別のurlを生成 
+func generate_url() {
+	
+}
 func main() {
 	// 020000が青森のエリアコード
 	url := "https://www.jma.go.jp/bosai/forecast/data/forecast/020000.json"
