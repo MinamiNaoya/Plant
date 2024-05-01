@@ -91,6 +91,7 @@ func readYAML() (config Config){
 	return config
 }
 
+
 func main() {
 	ctx := context.Background()
 	b, err := os.ReadFile("mail/credentials.json")
