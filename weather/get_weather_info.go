@@ -1,4 +1,4 @@
-package main
+package weather
 
 import (
 	"encoding/json"
@@ -6,10 +6,17 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"github.com/MinamiNaoya/Plant/weather"
 )
 
-var WETHER_CODE = map[string]string{"200": "曇りところにより雨", "202": "曇り 昼過ぎ 一時 雨", "205": "くもり"}
-var AREA_CODE = map[string]string{"020030": "三八上北", "020010": "津軽", "020020": "下北"}
+
+
+// 地域別のurlを生成 
+func generate_url(area_code AREACODE) (url string){
+	base_url := "https://www.jma.go.jp/bosai/forecast/data/forecast/"
+	url = base_url + string(area_code)
+	return url
+}
 
 func saveWeatherInfoJsonFile(url string) {
 	response, err := http.Get(url)
@@ -54,13 +61,13 @@ func saveWeatherInfoJsonFile(url string) {
 
 }
 
-// 地域別のurlを生成 
-func generate_url() {
+
+
+func GetWeatherInfo() {
+
+	area_code := GetAreaCode()
 	
-}
-func main() {
-	// 020000が青森のエリアコード
-	url := "https://www.jma.go.jp/bosai/forecast/data/forecast/020000.json"
+	url := generate_url(area_code)
 	saveWeatherInfoJsonFile(url)
 	
 	fmt.Println("JSONデータをファイルに保存しました。", "weather/weather_info.json")

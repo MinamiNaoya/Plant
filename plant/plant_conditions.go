@@ -7,8 +7,3 @@ import (
 func plant_condition() {
 	
 }
-func main(){
-	
-
-	
-}
