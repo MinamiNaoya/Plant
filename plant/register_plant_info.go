@@ -34,7 +34,6 @@ type DatabaseConfig struct {
 	Name string `yaml:"name"`
 }
 
-
 func inputString(prompt string) string {
 	var input string
 	fmt.Print(prompt)

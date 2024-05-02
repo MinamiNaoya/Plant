@@ -5,6 +5,7 @@ type AREACODE string
 
 const (
 	/*北海道*/
+	Hokkaido AREACODE = "010000"
 	Souya  AREACODE = "011000"
 	Ishikari AREACODE = "016000"
 	Abashiri AREACODE = "013000"
@@ -73,3 +74,4 @@ const (
 	Yaeyama AREACODE = "474000"
 
 )
+
