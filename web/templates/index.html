@@ -65,7 +65,7 @@
         <script>
             document.getElementById("areaForm").addEventListener("submit", function(event) {
                 event.preventDefault();
-
+        
                 var selectedKen = document.getElementById("kenSelect").value;
                 fetch("/getWeatherInfo", {
                     method: "POST",
@@ -74,9 +74,18 @@
                     },
                     body: JSON.stringify({ ken: selectedKen })
                 })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Received area code:", data.areaCode);
+                .then(response => {
+                    console.log("Response status:", response.status);
+                    return response.text(); // JSONではなくテキストとして一旦取得
+                })
+                .then(text => {
+                    console.log("Response text:", text);
+                    try {
+                        var data = JSON.parse(text); // テキストをパースしてJSONに変換
+                        console.log("Received area code:", data.areaCode);
+                    } catch (error) {
+                        console.error("Error parsing JSON:", error);
+                    }
                 })
                 .catch(error => {
                     console.error("Error:", error);

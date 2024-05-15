@@ -8,9 +8,9 @@ import (
 
 
 func main(){	
-	weather_service := weather.WeatherService{}
+	
 	get_weather_info := func(ctx *gin.Context) {
-    	weather_service.GetWeatherInfo(ctx.Writer, ctx.Request)
+    	weather.GetWeatherInfo(ctx.Writer, ctx.Request)
 	}
 
 	router := gin.Default()
