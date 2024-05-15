@@ -48,7 +48,7 @@ func saveWeatherInfoJsonFile(url string) {
 	}
 	defer file.Close()
 	
-	jsonData, err := json.MarshalIndent(data, "", "")
+	jsonData, err := json.MarshalIndent(data, "", "	")
 	if err != nil {
 		fmt.Println("Error encoding JSON:", err)
 		return

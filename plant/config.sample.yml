@@ -1,7 +1,3 @@
-database:
-  mysqluser: "mysql_user"
-  password: "mysql_password"
-
 server:
   host: localhost
   port: 8080
