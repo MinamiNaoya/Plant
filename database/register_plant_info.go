@@ -1,11 +1,13 @@
-package main
+package database
 
 import (
-    "database/sql"
-    "github.com/MinamiNaoya/Plant/database" 
-    _ "github.com/mattn/go-sqlite3"
-    "fmt"
+	"fmt"
     "log"
+    "database/sql"
+    _ "github.com/mattn/go-sqlite3"
+
+	"github.com/MinamiNaoya/Plant/common"
+    
 )
 
 type PlantInfo struct {
@@ -18,53 +20,19 @@ type PlantInfo struct {
 	SummerOrWinter    string
 	PurchaseDate      string
 }
-type Config struct{
-	Database DatabaseConfig
-	Server ServerConfig
-}
 
-type ServerConfig struct {
-	Host string `yaml:"host"`
-	Port int    `yaml:"port"`
-}
-// YAMLデータをマッピングするための構造体
-type DatabaseConfig struct {
-	User string `yaml:"mysqluser"`
-	Password string `yaml:"password"`
-	Name string `yaml:"name"`
-}
-
-func inputString(prompt string) string {
-	var input string
-	fmt.Print(prompt)
-	_, err := fmt.Scan(&input)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return input
-}
-
-func inputInt(prompt string) int {
-	var input int
-	fmt.Print(prompt)
-	_, err := fmt.Scan(&input)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return input
-}
 
 
 func inputPlantInfo() PlantInfo{
 	var plant PlantInfo
-	plant.Name = inputString("名前：")
-	plant.MinTemp = inputInt("最低気温: ")
-	plant.MaxTemp = inputInt("最高気温: ")
-	plant.Fertilizer = inputString("肥料: ")
-	plant.Habitat = inputString("生息地: ")
-	plant.WaterFreq = inputString("水やり頻度: ")
-	plant.SummerOrWinter = inputString("夏型または冬型: ")
-	plant.PurchaseDate = inputString("植物の購入時期: ")
+	plant.Name = common.inputString("名前：")
+	plant.MinTemp = common.inputInt("最低気温: ")
+	plant.MaxTemp = common.inputInt("最高気温: ")
+	plant.Fertilizer = common.inputString("肥料: ")
+	plant.Habitat = common.inputString("生息地: ")
+	plant.WaterFreq = common.inputString("水やり頻度: ")
+	plant.SummerOrWinter = common.inputString("夏型または冬型: ")
+	plant.PurchaseDate = common.inputString("植物の購入時期: ")
 	
 	return plant
 }
@@ -104,7 +72,7 @@ func execStatement(stmt *sql.Stmt, plant PlantInfo){
 }
 
 
-func main() {
+func RegisterPlantInfo() {
 	plant := inputPlantInfo()
 
 	dbPath := "./plant.db"
