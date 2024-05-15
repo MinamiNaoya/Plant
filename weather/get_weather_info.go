@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"github.com/MinamiNaoya/Plant/weather"
+	
 )
 
 
@@ -14,7 +14,8 @@ import (
 // 地域別のurlを生成 
 func generate_url(area_code AREACODE) (url string){
 	base_url := "https://www.jma.go.jp/bosai/forecast/data/forecast/"
-	url = base_url + string(area_code)
+	url = base_url + string(area_code) + ".json"
+	fmt.Println("Generated URL:", url)
 	return url
 }
 
@@ -63,12 +64,12 @@ func saveWeatherInfoJsonFile(url string) {
 
 
 
-func GetWeatherInfo() {
+func GetWeatherInfo(w http.ResponseWriter, r *http.Request) {
 
-	area_code := GetAreaCode()
+	area_code := GetAreaCode(w, r)
 	
 	url := generate_url(area_code)
+	fmt.Println(url)
 	saveWeatherInfoJsonFile(url)
-	
 	fmt.Println("JSONデータをファイルに保存しました。", "weather/weather_info.json")
 }
