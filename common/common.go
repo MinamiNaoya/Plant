@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func inputString(prompt string) string {
+func InputString(prompt string) string {
 	var input string
 	fmt.Print(prompt)
 	_, err := fmt.Scan(&input)
@@ -15,7 +15,7 @@ func inputString(prompt string) string {
 	return input
 }
 
-func inputInt(prompt string) int {
+func InputInt(prompt string) int {
 	var input int
 	fmt.Print(prompt)
 	_, err := fmt.Scan(&input)

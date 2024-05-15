@@ -4,8 +4,10 @@ import (
 	"fmt"
     "log"
     "database/sql"
+	
     _ "github.com/mattn/go-sqlite3"
 
+	"github.com/MinamiNaoya/Plant/database"
 	"github.com/MinamiNaoya/Plant/common"
     
 )
@@ -22,17 +24,17 @@ type PlantInfo struct {
 }
 
 
-
+/*植物のメタ情報を手動で入力*/
 func inputPlantInfo() PlantInfo{
 	var plant PlantInfo
-	plant.Name = common.inputString("名前：")
-	plant.MinTemp = common.inputInt("最低気温: ")
-	plant.MaxTemp = common.inputInt("最高気温: ")
-	plant.Fertilizer = common.inputString("肥料: ")
-	plant.Habitat = common.inputString("生息地: ")
-	plant.WaterFreq = common.inputString("水やり頻度: ")
-	plant.SummerOrWinter = common.inputString("夏型または冬型: ")
-	plant.PurchaseDate = common.inputString("植物の購入時期: ")
+	plant.Name = common.InputString("名前：")
+	plant.MinTemp = common.InputInt("最低気温: ")
+	plant.MaxTemp = common.InputInt("最高気温: ")
+	plant.Fertilizer = common.InputString("肥料: ")
+	plant.Habitat = common.InputString("生息地: ")
+	plant.WaterFreq = common.InputString("水やり頻度: ")
+	plant.SummerOrWinter = common.InputString("夏型または冬型: ")
+	plant.PurchaseDate = common.InputString("植物の購入時期: ")
 	
 	return plant
 }
